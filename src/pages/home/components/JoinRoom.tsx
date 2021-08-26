@@ -1,6 +1,6 @@
-import styles from './JoinRoom.less';
-import { Modal, Input, Checkbox } from 'antd';
 import React, { useState } from 'react';
+import { Form, Modal, Input, Checkbox } from 'antd';
+import styles from './JoinRoom.less';
 
 const carmeraOptions = [
   { label: '开启麦克风', value: 1 },
@@ -9,28 +9,24 @@ const carmeraOptions = [
 
 function JoinRoom() {
   const [visible, setVisible] = useState(false);
-  const [roomId, setRoomId] = useState('');
+  const [form] = Form.useForm();
 
   const showModal = () => {
     setVisible(true);
   };
 
-  const onRoomChange = (e) => {
-    setRoomId(e.target.value);
-  };
-
-  const onCheckboxChange = (e) => {
-    console.log('onCheckboxChange', e);
-  };
-
   // 加入
   const joinRoom = () => {
+    form.validateFields().then((values) => {
+      console.log('values', values);
+    });
     setVisible(false);
   };
 
   const cancelJoin = () => {
     setVisible(false);
   };
+
   return (
     <>
       <div className={styles.card} onClick={showModal}>
@@ -43,17 +39,26 @@ function JoinRoom() {
         visible={visible}
         title="加入房间"
         onOk={joinRoom}
+        okText="加入"
         onCancel={cancelJoin}
       >
-        <>
-          <div>房间号</div>
-          <Input placeholder="请输入房间号" onChange={onRoomChange} />
-          <div>加入选项</div>
-          <Checkbox.Group
-            options={carmeraOptions}
-            onChange={onCheckboxChange}
-          />
-        </>
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="房间号"
+            name="roomId"
+            rules={[
+              {
+                required: true,
+                message: '请输入房间号!',
+              },
+            ]}
+          >
+            <Input placeholder="请输入房间号" />
+          </Form.Item>
+          <Form.Item label="加入选项" name="camera">
+            <Checkbox.Group options={carmeraOptions} />
+          </Form.Item>
+        </Form>
       </Modal>
     </>
   );
