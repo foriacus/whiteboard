@@ -1,0 +1,31 @@
+body {
+  :global {
+    ul,
+    li {
+      list-style: none;
+    }
+  }
+}
+.header {
+  height: 50px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 960px;
+  margin: 0 auto;
+  .left {
+    display: flex;
+    align-items: center;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.content {
+  background-color: #f3f6f9;
+  margin: 0 auto;
+  height: calc(100vh - 50px);
+}
