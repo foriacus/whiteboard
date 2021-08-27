@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Space,
   Radio,
@@ -13,11 +13,11 @@ import {
 import { SettingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import SimpleLayout from '../../layout/simple-layout/SimpleLayout';
-import styles from './HandlereserveRoom.less';
+import styles from './reserveRoom.less';
 
 const carmeraOptions = [{ label: '周期性房间', value: 1 }];
 const dateFormat = 'YYYY-MM-DD';
-const format = 'HH:mm';
+const hourFormat = 'HH:mm';
 const { Option } = Select;
 
 const selectAfter = (
@@ -67,16 +67,58 @@ function CustomCheckbox(props) {
   );
 }
 
+function CustomDatePicker(props) {
+  const { value, onChange } = props;
+  // value: 2021-10-21 18:00
+
+  const defaultDate = moment().format('YYYY-MM-DD');
+
+  const [dateValue, timeValue] = value
+    ? value.split(' ')
+    : [defaultDate, '08:00'];
+
+  const [date, setDate] = useState(dateValue);
+  const [time, setTime] = useState(timeValue);
+
+  const onDateChange = (e) => {
+    const dateStr = moment(e).format(dateFormat);
+    setDate(dateStr);
+    // 通知form
+    onChange(`${dateStr} ${time}`);
+  };
+  const onTimeChange = (e) => {
+    const timeStr = moment(e).format(hourFormat);
+    setTime(timeStr);
+    // 通知form
+    onChange(`${date} ${timeStr}`);
+  };
+
+  return (
+    <>
+      <DatePicker
+        format={dateFormat}
+        className={styles.dateInput}
+        value={moment(date, dateFormat)}
+        onChange={onDateChange}
+      />
+      <TimePicker
+        format={hourFormat}
+        className={styles.timeInput}
+        value={moment(time, hourFormat)}
+        onChange={onTimeChange}
+      />
+    </>
+  );
+}
+
 const HandleReserveRoom = (props) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
 
-  const onFinish = (values) => {
-    console.log(values);
-  };
-
-  const submit = () => {
-    form.submit();
+  const onSubmit = () => {
+    form.validateFields().then((values) => {
+      console.log('values', values);
+    });
   };
 
   return (
@@ -87,8 +129,8 @@ const HandleReserveRoom = (props) => {
             <Form
               form={form}
               layout="vertical"
-              hideRequiredMark="true"
-              onFinish={onFinish}
+              hideRequiredMark
+              initialValues={{ type: 1 }}
             >
               <Form.Item
                 label="主题"
@@ -106,28 +148,10 @@ const HandleReserveRoom = (props) => {
                 <CustomCheckbox />
               </Form.Item>
               <Form.Item label="开始时间" name="start">
-                <DatePicker
-                  defaultValue={moment('2015/01/01', dateFormat)}
-                  format={dateFormat}
-                  className={styles.dateInput}
-                />
-                <TimePicker
-                  defaultValue={moment('12:08', format)}
-                  format={format}
-                  className={styles.timeInput}
-                />
+                <CustomDatePicker />
               </Form.Item>
               <Form.Item label="结束时间" name="end">
-                <DatePicker
-                  defaultValue={moment('2015/01/01', dateFormat)}
-                  format={dateFormat}
-                  className={styles.dateInput}
-                />
-                <TimePicker
-                  defaultValue={moment('12:08', format)}
-                  format={format}
-                  className={styles.timeInput}
-                />
+                <CustomDatePicker />
               </Form.Item>
               <Form.Item name="period">
                 <Checkbox.Group options={carmeraOptions} />
@@ -143,7 +167,7 @@ const HandleReserveRoom = (props) => {
                   >
                     取消
                   </Button>
-                  <Button htmlType="submit" onClick={submit}>
+                  <Button htmlType="submit" onClick={onSubmit}>
                     预订
                   </Button>
                 </Space>
