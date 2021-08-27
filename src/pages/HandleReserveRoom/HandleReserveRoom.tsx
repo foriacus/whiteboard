@@ -12,7 +12,7 @@ import {
 } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import SimpleLayout from '../../../layout/simple-layout/SimpleLayout';
+import SimpleLayout from '../../layout/simple-layout/SimpleLayout';
 import styles from './HandlereserveRoom.less';
 
 const carmeraOptions = [{ label: '周期性房间', value: 1 }];

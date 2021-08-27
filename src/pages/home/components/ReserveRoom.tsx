@@ -7,7 +7,7 @@ const ReserveRoom = () => {
     <div>
       <div
         className={styles.card}
-        onClick={() => history.push('/home/reserveroom')}
+        onClick={() => history.push('/handle-reserve-room')}
       >
         <div className={styles.circle}>
           <div>

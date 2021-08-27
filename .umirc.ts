@@ -7,8 +7,8 @@ export default defineConfig({
   routes: [
     { path: '/', component: '@/pages/home/index' },
     {
-      path: '/home/reserveroom',
-      component: '@/pages/home/components/HandlereserveRoom',
+      path: '/handle-reserve-room',
+      component: '@/pages/HandleReserveRoom/HandleReserveRoom',
     },
   ],
   fastRefresh: {},
